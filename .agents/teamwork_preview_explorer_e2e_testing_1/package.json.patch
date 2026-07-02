@@ -1,0 +1,23 @@
+diff --git a/package.json b/package.json
+index 54be22b..654c60a 100644
+--- a/package.json
++++ b/package.json
+@@ -4,7 +4,8 @@
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+-    "test": "echo \"Error: no test specified\" && exit 1",
++    "test": "playwright test",
++    "test:e2e": "playwright test",
+     "start": "node server.js",
+     "dev": "node server.js"
+   },
+@@ -17,5 +18,8 @@
+     "cors": "^2.8.6",
+     "express": "^5.2.1",
+     "google-translate-api-x": "^10.7.3"
++  },
++  "devDependencies": {
++    "@playwright/test": "^1.49.0"
+   }
+ }

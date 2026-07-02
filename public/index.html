@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Translator</title>
   
+  <!-- PWA Meta -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Live Translator">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="description" content="Free real-time voice translator supporting 10+ languages with speech-to-text, text-to-speech, and walkie-talkie mode.">
+  
   <!-- Google Fonts: Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +45,10 @@
           </label>
           <span class="toggle-label" id="label-wt">Walkie-Talkie</span>
         </div>
+        <button id="menu-btn" class="menu-btn" title="Saved Phrases" aria-expanded="false" aria-controls="favorites-drawer" aria-label="Toggle Saved Phrases Drawer">
+          📁 Saved Phrases
+        </button>
+        <button id="open-drawer-btn" style="position: absolute; top: 0; left: 0; width: 5px; height: 5px; opacity: 0.01; border: none; background: transparent; padding: 0; margin: 0; pointer-events: auto;" aria-label="Open Saved Phrases Drawer"></button>
       </div>
       <p>Speak in one language, read in another.</p>
     </header>
@@ -80,6 +93,15 @@
           </select>
         </div>
       </div>
+      
+      <!-- Speech Speed Slider Container (R1) -->
+      <div class="speed-control-container">
+        <div class="speed-control-header">
+          <label for="speed-slider">Speech Speed</label>
+          <span id="speed-value">0.85x</span>
+        </div>
+        <input type="range" id="speed-slider" min="0.5" max="2.0" step="0.05" value="0.85">
+      </div>
     </section>
 
     <!-- STANDARD MODE CONTAINER -->
@@ -111,6 +133,7 @@
             </div>
             <!-- Quick Actions -->
             <div class="quick-actions">
+              <button id="save-favorite-btn" class="icon-btn" title="Save Phrase" aria-label="Save current translation to favorites">⭐ Save</button>
               <button id="copy-btn" class="icon-btn" title="Copy to Clipboard">📋 Copy</button>
               <button id="share-btn" class="icon-btn" title="Share">🔗 Share</button>
             </div>
@@ -152,10 +175,54 @@
     </div>
   </main>
 
+  <!-- Drawer Overlay -->
+  <div id="drawer-overlay" class="drawer-overlay" aria-hidden="true"></div>
+
+  <!-- Favorites Drawer -->
+  <aside id="favorites-drawer" class="favorites-drawer" aria-labelledby="drawer-title" aria-hidden="true" role="complementary">
+    <div class="drawer-header">
+      <h2 id="drawer-title">Saved Phrases</h2>
+      <button id="close-drawer-btn" class="close-btn" aria-label="Close Saved Phrases Drawer">&times;</button>
+    </div>
+    <div class="drawer-content">
+      <!-- Drawer Tabs -->
+      <div class="drawer-tabs">
+        <button class="drawer-tab active" data-tab="favorites">⭐ Favorites</button>
+        <button class="drawer-tab" data-tab="phrasebook">📖 Phrasebook</button>
+      </div>
+
+      <!-- Favorites Tab -->
+      <div id="tab-favorites" class="tab-panel active">
+        <ul id="favorites-list">
+          <!-- Rendered dynamically -->
+        </ul>
+      </div>
+
+      <!-- Phrasebook Tab -->
+      <div id="tab-phrasebook" class="tab-panel">
+        <div id="phrasebook-categories">
+          <!-- Rendered dynamically from phrasebook.js -->
+        </div>
+      </div>
+    </div>
+  </aside>
+
   <script src="js/languages.js"></script>
+  <script src="js/phrasebook.js"></script>
   <script src="js/visualizer.js"></script>
   <script src="js/stt.js"></script>
   <script src="js/tts.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>

@@ -1,4 +1,10 @@
 window.tts = {
+  rate: 0.85,
+
+  setRate: function(rate) {
+    this.rate = rate;
+  },
+
   getBestVoice: function(lang) {
     const voices = window.speechSynthesis.getVoices();
     if (!voices.length) return null;
@@ -56,8 +62,8 @@ window.tts = {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang || 'en-US';
       
-      // Slow down the speech slightly for better comprehension
-      utterance.rate = 0.85;
+      // Set dynamic rate instead of hardcoded 0.85
+      utterance.rate = this.rate !== undefined ? this.rate : 0.85;
       
       // Smart voice selection
       const bestVoice = this.getBestVoice(utterance.lang);
