@@ -19,19 +19,32 @@
   <div class="blob-2"></div>
   <div class="blob-3"></div>
 
+  <!-- Audio Visualizer (Background) -->
+  <canvas id="audio-visualizer"></canvas>
+
   <!-- Main App Container -->
   <main class="app-container">
     <!-- Header -->
     <header class="app-header">
-      <h1>Live Translator</h1>
+      <div class="header-top">
+        <h1>Live Translator</h1>
+        <div class="mode-toggle-container">
+          <span class="toggle-label active" id="label-standard">Standard</span>
+          <label class="switch">
+            <input type="checkbox" id="mode-toggle">
+            <span class="slider round"></span>
+          </label>
+          <span class="toggle-label" id="label-wt">Walkie-Talkie</span>
+        </div>
+      </div>
       <p>Speak in one language, read in another.</p>
     </header>
 
-    <!-- Controls Section -->
-    <section class="controls-section">
+    <!-- Language Selectors (Shared between modes) -->
+    <section class="shared-controls">
       <div class="lang-selectors">
         <div class="selector-group">
-          <label for="source-lang">Source Language</label>
+          <label for="source-lang">Person A Language</label>
           <select id="source-lang">
             <option value="en-US">English (US)</option>
             <option value="es-ES">Spanish</option>
@@ -54,7 +67,7 @@
         </div>
 
         <div class="selector-group">
-          <label for="target-lang">Target Language</label>
+          <label for="target-lang">Person B Language</label>
           <select id="target-lang">
             <option value="es-ES">Spanish</option>
             <option value="en-US">English (US)</option>
@@ -67,36 +80,80 @@
           </select>
         </div>
       </div>
-
-      <div class="action-buttons">
-        <button id="start-btn" class="btn primary-btn">
-          Start Translation
-        </button>
-        <button id="stop-btn" class="btn secondary-btn" disabled>
-          Stop
-        </button>
-      </div>
     </section>
 
-    <!-- Results Section -->
-    <section class="results-section">
-      <div class="result-card">
-        <h2>Transcript</h2>
-        <div id="transcript-box" class="content-box">
-          <p class="placeholder-text">Listening will appear here...</p>
+    <!-- STANDARD MODE CONTAINER -->
+    <div id="standard-mode-container">
+      <section class="controls-section">
+        <div class="action-buttons">
+          <button id="start-btn" class="btn primary-btn">
+            Start Translation
+          </button>
+          <button id="stop-btn" class="btn secondary-btn" disabled>
+            Stop
+          </button>
+        </div>
+      </section>
+
+      <section class="results-section">
+        <div class="result-card">
+          <h2>Transcript</h2>
+          <div id="transcript-box" class="content-box">
+            <p class="placeholder-text">Listening will appear here...</p>
+          </div>
+        </div>
+        
+        <div class="result-card highlight">
+          <h2>Translation</h2>
+          <div class="content-box-wrapper">
+            <div id="translated-box" class="content-box">
+              <p class="placeholder-text">Translation will appear here...</p>
+            </div>
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+              <button id="copy-btn" class="icon-btn" title="Copy to Clipboard">📋 Copy</button>
+              <button id="share-btn" class="icon-btn" title="Share">🔗 Share</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- WALKIE-TALKIE MODE CONTAINER -->
+    <div id="walkie-talkie-container" style="display: none;">
+      <div class="wt-layout">
+        <!-- Person A Pane -->
+        <div class="wt-pane person-a-pane">
+          <h2 id="wt-name-a">Person A (English)</h2>
+          <div class="wt-transcript-container">
+            <div class="wt-subtext">Translated to:</div>
+            <div id="wt-transcript-a" class="wt-text">Waiting...</div>
+          </div>
+          <button id="wt-start-a" class="btn primary-btn wt-btn">
+            Hold to Speak
+          </button>
+        </div>
+        
+        <!-- Divider -->
+        <div class="wt-divider"></div>
+
+        <!-- Person B Pane -->
+        <div class="wt-pane person-b-pane">
+          <h2 id="wt-name-b">Person B (Spanish)</h2>
+          <button id="wt-start-b" class="btn primary-btn wt-btn wt-b-btn">
+            Hold to Speak
+          </button>
+          <div class="wt-transcript-container">
+            <div class="wt-subtext">Translated to:</div>
+            <div id="wt-transcript-b" class="wt-text">Waiting...</div>
+          </div>
         </div>
       </div>
-      
-      <div class="result-card highlight">
-        <h2>Translation</h2>
-        <div id="translated-box" class="content-box">
-          <p class="placeholder-text">Translation will appear here...</p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
   <script src="js/languages.js"></script>
+  <script src="js/visualizer.js"></script>
   <script src="js/stt.js"></script>
   <script src="js/tts.js"></script>
   <script src="js/app.js"></script>
