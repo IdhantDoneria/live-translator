@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Translator</title>
+  
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Decorative Background Blobs -->
+  <div class="blob-1"></div>
+  <div class="blob-2"></div>
+  <div class="blob-3"></div>
+
+  <!-- Main App Container -->
+  <main class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <h1>Live Translator</h1>
+      <p>Speak in one language, read in another.</p>
+    </header>
+
+    <!-- Controls Section -->
+    <section class="controls-section">
+      <div class="lang-selectors">
+        <div class="selector-group">
+          <label for="source-lang">Source Language</label>
+          <select id="source-lang">
+            <option value="en-US">English (US)</option>
+            <option value="es-ES">Spanish</option>
+            <option value="fr-FR">French</option>
+            <option value="de-DE">German</option>
+            <option value="it-IT">Italian</option>
+            <option value="ja-JP">Japanese</option>
+            <option value="ko-KR">Korean</option>
+            <option value="zh-CN">Chinese (Simplified)</option>
+          </select>
+        </div>
+        
+        <div class="icon-swap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3L21 8L16 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 8H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 21L3 16L8 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 16H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="selector-group">
+          <label for="target-lang">Target Language</label>
+          <select id="target-lang">
+            <option value="es-ES">Spanish</option>
+            <option value="en-US">English (US)</option>
+            <option value="fr-FR">French</option>
+            <option value="de-DE">German</option>
+            <option value="it-IT">Italian</option>
+            <option value="ja-JP">Japanese</option>
+            <option value="ko-KR">Korean</option>
+            <option value="zh-CN">Chinese (Simplified)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="start-btn" class="btn primary-btn">
+          Start Translation
+        </button>
+        <button id="stop-btn" class="btn secondary-btn" disabled>
+          Stop
+        </button>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+      <div class="result-card">
+        <h2>Transcript</h2>
+        <div id="transcript-box" class="content-box">
+          <p class="placeholder-text">Listening will appear here...</p>
+        </div>
+      </div>
+      
+      <div class="result-card highlight">
+        <h2>Translation</h2>
+        <div id="translated-box" class="content-box">
+          <p class="placeholder-text">Translation will appear here...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/languages.js"></script>
+  <script src="js/stt.js"></script>
+  <script src="js/tts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
