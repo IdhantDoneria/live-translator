@@ -1,5 +1,5 @@
 // Service Worker for Live Translator PWA
-const CACHE_NAME = 'live-translator-v1';
+const CACHE_NAME = 'live-translator-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
