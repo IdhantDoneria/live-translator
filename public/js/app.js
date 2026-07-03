@@ -473,6 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+    }
     // ==========================================
     // Drawer Tabs (R3) - Switch between Favorites & Phrasebook
     // ==========================================
