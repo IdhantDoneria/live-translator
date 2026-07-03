@@ -433,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             // Play button click (stop propagation)
-            const playBtn = li.querySelector('.play-btn');
             if (playBtn) {
                 playBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
