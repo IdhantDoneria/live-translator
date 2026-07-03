@@ -82,7 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Walkie-Talkie names based on select
     sourceSelect.addEventListener('change', updateWtNames);
-    targetSelect.addEventListener('change', updateWtNames);
+    targetSelect.addEventListener('change', () => {
+        updateWtNames();
+        // Dynamic Favorites translation update
+        const favoritesDrawer = document.getElementById('favorites-drawer');
+        if (typeof renderFavorites === 'function' && favoritesDrawer && favoritesDrawer.classList.contains('open')) {
+            renderFavorites();
+        }
+    });
 
     // Language Swap Logic
     const swapIcon = document.querySelector('.icon-swap');
@@ -346,26 +353,73 @@ document.addEventListener('DOMContentLoaded', () => {
             li.setAttribute('aria-label', `Play translation: ${fav.translation}`);
             
             const fromBase = fav.fromLang.split('-')[0].toUpperCase();
-            const toBase = fav.toLang.split('-')[0].toUpperCase();
+            
+            // Dynamic translation check
+            const currentTargetLang = (window.targetSelect && window.targetSelect.value) ? window.targetSelect.value : fav.toLang;
+            const needsTranslation = fav.toLang !== currentTargetLang;
+            const displayToLang = needsTranslation ? currentTargetLang : fav.toLang;
+            const toBase = displayToLang.split('-')[0].toUpperCase();
             
             li.innerHTML = `
                 <div class="fav-text-container">
-                    <span class="fav-translation">${fav.translation}</span>
+                    <span class="fav-translation">${needsTranslation ? 'Translating...' : fav.translation}</span>
                     <span class="fav-original">${fav.text}</span>
                     <span class="fav-langs">${fromBase} &rarr; ${toBase}</span>
                 </div>
                 <div class="fav-actions">
-                    <button class="play-btn icon-btn" title="Play TTS" aria-label="Play translation">🔊 Play</button>
+                    <button class="play-btn icon-btn" title="Play TTS" aria-label="Play translation" ${needsTranslation ? 'disabled' : ''}>🔊 Play</button>
                     <button class="delete-fav-btn" title="Delete Saved Phrase" aria-label="Delete saved phrase">&times;</button>
                 </div>
             `;
             
+            const translationSpan = li.querySelector('.fav-translation');
+            const playBtn = li.querySelector('.play-btn');
+            
+            let currentTranslation = fav.translation;
+            let currentToLang = fav.toLang;
+            
             // TTS Playback
             const playTranslation = () => {
-                if (window.tts && typeof window.tts.play === 'function') {
-                    window.tts.play(fav.translation, fav.toLang);
+                if (window.tts && typeof window.tts.play === 'function' && !playBtn.disabled) {
+                    window.tts.play(currentTranslation, currentToLang);
                 }
             };
+
+            // Async translate if target language changed
+            if (needsTranslation) {
+                li.classList.add('loading');
+                let toCode = 'en';
+                if (Array.isArray(window.LANGUAGES)) {
+                    const tgtObj = window.LANGUAGES.find(l => l.code === currentTargetLang);
+                    if (tgtObj && tgtObj.translateCode) toCode = tgtObj.translateCode;
+                }
+                
+                fetch('/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: fav.text, from: 'en', to: toCode })
+                }).then(res => res.json()).then(data => {
+                    const translated = data.translatedText || data.translation || data.text || data.result;
+                    if (translated) {
+                        currentTranslation = translated;
+                        currentToLang = currentTargetLang;
+                        translationSpan.textContent = currentTranslation;
+                        
+                        // Update cache
+                        fav.translation = currentTranslation;
+                        fav.toLang = currentToLang;
+                        localStorage.setItem('live_translator_favorites', JSON.stringify(favorites));
+                        
+                        playBtn.disabled = false;
+                        li.classList.remove('loading');
+                        li.setAttribute('aria-label', `Play translation: ${currentTranslation}`);
+                    }
+                }).catch(e => {
+                    console.error('Dynamic favorite translation failed', e);
+                    translationSpan.textContent = 'Translation failed';
+                    li.classList.remove('loading');
+                });
+            }
             
             // Clicking list item body triggers TTS
             li.addEventListener('click', playTranslation);
